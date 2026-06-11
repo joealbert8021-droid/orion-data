@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Policing &amp; Disability: A Data-Driven Analysis (2020–2024)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#0d1117;--surface-1:#131929;--surface-2:#1a2235;--surface-3:#1f2b40;
+  --coral:#e94560;--teal:#00b4d8;--amber:#f4a261;--green:#2dd4bf;
+  --text:#e8edf4;--text-muted:#7a8fa8;--border:rgba(255,255,255,0.07);
+  --font-head:'DM Sans',sans-serif;--font-body:'Inter',sans-serif;
+  --radius:12px;--radius-sm:8px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.6}
+a{color:var(--teal);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);height:52px;display:flex;align-items:center}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;width:100%;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:var(--font-head);font-weight:900;font-size:15px;color:var(--coral);letter-spacing:.04em}
+.nav-links{display:flex;gap:4px}
+.nav-links a{font-size:12px;font-weight:500;color:var(--text-muted);padding:6px 12px;border-radius:20px;transition:all .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--text);background:var(--surface-2);text-decoration:none}
+
+/* CONTAINER */
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* HERO */
+.hero{padding:72px 0 60px;text-align:center}
+.orion-badge{display:inline-flex;align-items:center;gap:12px;font-family:var(--font-head);font-size:15px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--coral);border:1px solid rgba(233,69,96,.4);border-radius:32px;padding:10px 24px;margin-bottom:24px;background:rgba(233,69,96,.08)}
+.hero h1{font-family:var(--font-head);font-size:clamp(32px,5vw,58px);font-weight:900;line-height:1.15;color:#fff;margin-bottom:20px}
+.hero h1 span{color:var(--coral)}
+.hero .subtitle{max-width:700px;margin:0 auto 48px;color:var(--text-muted);font-size:15px;line-height:1.7}
+.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:8px}
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.kpi-grid{grid-template-columns:1fr 1fr}}
+.kpi-card{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--radius);padding:24px 16px;text-align:center}
+.kpi-num{font-family:var(--font-head);font-size:clamp(28px,3vw,40px);font-weight:900;line-height:1;margin-bottom:10px}
+.kpi-num.coral{color:var(--coral)}
+.kpi-num.amber{color:var(--amber)}
+.kpi-num.teal{color:var(--teal)}
+.kpi-num.green{color:var(--green)}
+.kpi-label{font-size:12px;color:var(--text-muted);line-height:1.4;margin-bottom:8px}
+.kpi-source{font-size:10px;color:#4a5f7a;line-height:1.3}
+
+/* SECTIONS */
+.section{padding:64px 0;border-top:1px solid var(--border)}
+.section-eyebrow{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--coral);margin-bottom:10px}
+.section-title{font-family:var(--font-head);font-size:clamp(22px,3vw,32px);font-weight:700;color:#fff;margin-bottom:8px}
+.section-sub{font-size:14px;color:var(--text-muted);margin-bottom:36px;max-width:700px;line-height:1.6}
+
+/* CARDS */
+.card{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--radius);padding:24px}
+.card-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px}
+.chart-wrap{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px}
+.chart-title{font-family:var(--font-head);font-size:15px;font-weight:600;color:#fff;margin-bottom:4px}
+.chart-sub{font-size:12px;color:var(--text-muted);margin-bottom:20px}
+.chart-note{font-size:13px;color:#8b9eb7;margin-top:14px;line-height:1.65;border-left:3px solid rgba(244,162,97,.4);padding-left:12px}
+
+/* INCIDENTS TABLE */
+.table-controls{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.search-input{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:8px 14px;font-size:13px;font-family:var(--font-body);flex:1;min-width:200px}
+.search-input:focus{outline:none;border-color:var(--coral)}
+.filter-select{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:8px 14px;font-size:13px;font-family:var(--font-body)}
+.filter-select:focus{outline:none;border-color:var(--coral)}
+.incidents-table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse}
+th{background:var(--surface-2);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);padding:10px 14px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--border)}
+td{padding:10px 14px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--surface-2)}
+tr.highlight td{border-left:3px solid var(--coral)}
+.tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;letter-spacing:.04em}
+.tag.unarmed{background:rgba(233,69,96,.15);color:var(--coral)}
+.tag.armed{background:rgba(122,143,168,.12);color:var(--text-muted)}
+.tag.va{background:rgba(0,180,216,.12);color:var(--teal)}
+.source-link{color:var(--teal);font-size:11px}
+
+/* MAP */
+.state-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;padding:20px;background:var(--surface-1);border:1px solid var(--border);border-radius:var(--radius)}
+.state-box{aspect-ratio:1;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;cursor:pointer;transition:opacity .2s;letter-spacing:.03em}
+.state-box:hover{opacity:.8;transform:scale(1.1)}
+.map-legend{display:flex;align-items:center;gap:12px;margin-top:12px;font-size:11px;color:var(--text-muted)}
+.legend-bar{height:8px;width:180px;border-radius:4px;background:linear-gradient(90deg,#1a4a6e 0%,#00b4d8 40%,#e94560 100%)}
+.map-tables{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+@media(max-width:700px){.map-tables{grid-template-columns:1fr}}
+.map-table-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px}
+.rank-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
+.rank-row:last-child{border-bottom:none}
+.rank-state{color:var(--text)}
+.rank-val{font-weight:600;color:var(--coral)}
+
+/* CO-RESPONDER */
+.program-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:900px){.program-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.program-grid{grid-template-columns:1fr}}
+.prog-card{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.prog-name{font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--teal);margin-bottom:2px}
+.prog-loc{font-size:11px;color:var(--text-muted);margin-bottom:14px}
+.prog-stat{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px}
+.prog-stat:last-child{border-bottom:none}
+.prog-stat-val{font-weight:600;color:var(--teal)}
+.prog-stat-val.green{color:var(--green)}
+.prog-stat-val.amber{color:var(--amber)}
+.zero-badge{display:inline-block;background:rgba(45,212,191,.1);color:var(--green);font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;border:1px solid rgba(45,212,191,.25);margin-top:10px}
+.donut-row{display:grid;grid-template-columns:300px 1fr;gap:32px;align-items:center;margin-bottom:36px}
+@media(max-width:700px){.donut-row{grid-template-columns:1fr}}
+.donut-wrap{position:relative}
+.donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.donut-center .num{font-family:var(--font-head);font-size:28px;font-weight:700;color:#fff}
+.donut-center .lbl{font-size:11px;color:var(--text-muted)}
+.legend-items{display:flex;flex-direction:column;gap:10px}
+.legend-item{display:flex;align-items:center;gap:10px;font-size:13px}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.eff-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+@media(max-width:700px){.eff-grid{grid-template-columns:1fr}}
+.eff-stat{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.eff-stat:last-child{border-bottom:none}
+.eff-val{font-weight:600;color:var(--green)}
+
+/* VIRGINIA */
+.timeline{margin-bottom:36px}
+.tl-item{display:flex;gap:20px;padding:16px 0;border-bottom:1px solid var(--border);position:relative}
+.tl-item:last-child{border-bottom:none}
+.tl-dot{width:10px;height:10px;border-radius:50%;background:var(--coral);flex-shrink:0;margin-top:5px}
+.tl-dot.teal{background:var(--teal)}
+.tl-meta{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--coral);margin-bottom:4px}
+.tl-meta.teal{color:var(--teal)}
+.tl-name{font-size:15px;font-weight:600;color:#fff;margin-bottom:4px}
+.tl-desc{font-size:12px;color:var(--text-muted);line-height:1.6}
+.marcus-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
+@media(max-width:700px){.marcus-grid{grid-template-columns:1fr}}
+.marcus-card{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.marcus-card-title{font-size:12px;font-weight:700;color:var(--teal);margin-bottom:16px}
+.marcus-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px}
+.marcus-row:last-child{border-bottom:none}
+.marcus-val{font-weight:600;color:var(--text)}
+.gaps-list{display:flex;flex-direction:column;gap:10px}
+.gap-item{display:flex;gap:12px;align-items:flex-start;padding:12px 16px;background:rgba(233,69,96,.05);border:1px solid rgba(233,69,96,.15);border-radius:var(--radius-sm)}
+.gap-icon{color:var(--coral);font-size:14px;flex-shrink:0;margin-top:1px}
+
+/* ACTION */
+.action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:900px){.action-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.action-grid{grid-template-columns:1fr}}
+.action-card{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--radius);padding:24px}
+.action-num{font-family:var(--font-head);font-size:32px;font-weight:900;color:rgba(233,69,96,.25);margin-bottom:8px}
+.action-title{font-size:14px;font-weight:600;color:#fff;margin-bottom:8px}
+.action-body{font-size:12px;color:var(--text-muted);line-height:1.7}
+.action-body a{color:var(--teal)}
+.stat-row{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:36px}
+.stat-item{flex:1;min-width:120px;background:var(--surface-1);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px}
+.stat-num{font-family:var(--font-head);font-size:24px;font-weight:700;color:var(--coral);line-height:1;margin-bottom:4px}
+.stat-label{font-size:11px;color:var(--text-muted)}
+
+/* FOOTER */
+footer{background:var(--surface-1);border-top:1px solid var(--border);padding:36px 0;text-align:center}
+.footer-orion{font-family:var(--font-head);font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);margin-bottom:6px}
+.footer-creator{font-size:12px;color:var(--text-muted);margin-bottom:14px}
+footer p{font-size:12px;color:#5a7090;line-height:1.7}
+footer a{color:var(--teal)}
+
+/* ========== GLOW HOVER EFFECTS ========== */
+.kpi-card{transition:transform .25s,box-shadow .25s,border-color .25s}
+.kpi-card:hover{transform:translateY(-4px);box-shadow:0 0 28px rgba(233,69,96,.22),0 8px 24px rgba(0,0,0,.4);border-color:rgba(233,69,96,.35)}
+
+.chart-wrap{transition:box-shadow .25s,border-color .25s}
+.chart-wrap:hover{box-shadow:0 0 24px rgba(0,180,216,.12),0 8px 24px rgba(0,0,0,.35);border-color:rgba(0,180,216,.2)}
+
+.card{transition:box-shadow .25s,border-color .25s}
+.card:hover{box-shadow:0 0 22px rgba(0,180,216,.13),0 6px 20px rgba(0,0,0,.3);border-color:rgba(0,180,216,.2)}
+
+.prog-card{transition:transform .25s,box-shadow .25s,border-color .25s}
+.prog-card:hover{transform:translateY(-3px);box-shadow:0 0 28px rgba(0,180,216,.2),0 8px 24px rgba(0,0,0,.4);border-color:rgba(0,180,216,.35)}
+
+.action-card{transition:transform .25s,box-shadow .25s,border-color .25s}
+.action-card:hover{transform:translateY(-3px);box-shadow:0 0 28px rgba(233,69,96,.18),0 8px 24px rgba(0,0,0,.4);border-color:rgba(233,69,96,.3)}
+
+.marcus-card{transition:box-shadow .25s,border-color .25s}
+.marcus-card:hover{box-shadow:0 0 24px rgba(0,180,216,.15),0 6px 20px rgba(0,0,0,.3);border-color:rgba(0,180,216,.25)}
+
+.stat-item{transition:transform .25s,box-shadow .25s,border-color .25s}
+.stat-item:hover{transform:translateY(-3px);box-shadow:0 0 22px rgba(233,69,96,.2),0 6px 20px rgba(0,0,0,.35);border-color:rgba(233,69,96,.3)}
+
+.gap-item{transition:box-shadow .25s,border-color .25s,background .25s}
+.gap-item:hover{box-shadow:0 0 18px rgba(233,69,96,.18);border-color:rgba(233,69,96,.35);background:rgba(233,69,96,.08)}
+
+.tl-item{transition:background .25s,box-shadow .25s;border-radius:var(--radius-sm);padding-left:8px;padding-right:8px;cursor:default}
+.tl-item:hover{background:rgba(233,69,96,.04);box-shadow:inset 3px 0 0 var(--coral)}
+
+.orion-badge{transition:box-shadow .3s,border-color .3s}
+.orion-badge:hover{box-shadow:0 0 32px rgba(233,69,96,.3),0 0 60px rgba(233,69,96,.1);border-color:rgba(233,69,96,.7)}
+
+.nav-links a{transition:all .2s}
+.nav-links a:hover{box-shadow:0 0 14px rgba(233,69,96,.2)}
+
+.state-box{transition:opacity .2s,transform .2s,box-shadow .2s}
+.state-box:hover{opacity:1 !important;transform:scale(1.18);box-shadow:0 0 14px rgba(255,255,255,.25),0 0 6px rgba(255,255,255,.15);z-index:2;position:relative}
+
+tr:hover td{background:var(--surface-2)}
+.incidents-table-wrap tr:hover td{box-shadow:inset 0 0 0 999px rgba(233,69,96,.04)}
+
+.rank-row{transition:background .2s,box-shadow .2s;border-radius:6px;padding-left:6px;padding-right:6px;cursor:default}
+.rank-row:hover{background:rgba(0,180,216,.06);box-shadow:0 0 10px rgba(0,180,216,.08)}
+
+.zero-badge{transition:box-shadow .25s}
+.zero-badge:hover{box-shadow:0 0 18px rgba(45,212,191,.3)}
+
+/* UTILS */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:700px){.two-col{grid-template-columns:1fr}}
+.badge-coral{display:inline-block;background:rgba(233,69,96,.12);color:var(--coral);font-size:10px;font-weight:700;padding:2px 10px;border-radius:20px;border:1px solid rgba(233,69,96,.2)}
+.mt-8{margin-top:8px}
+.mt-16{margin-top:16px}
+.mt-24{margin-top:24px}
+.fade-in{animation:fadeIn .6s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo">P&amp;D</span>
+    <div class="nav-links">
+      <a href="#hero" class="active">Overview</a>
+      <a href="#trends">Trends</a>
+      <a href="#map">Map</a>
+      <a href="#incidents">Incidents</a>
+      <a href="#coresponder">Co-Responder</a>
+      <a href="#virginia">Virginia</a>
+      <a href="#action">Action</a>
+      <a href="#livemonitor" id="lm-nav" style="display:none">Live Monitor</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+<div class="container">
+  <div class="orion-badge">
+    <svg viewBox="0 0 38 50" width="26" height="34" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;margin-right:2px">
+      <line x1="7" y1="9" x2="31" y2="11" stroke="#e94560" stroke-width="1" stroke-linecap="round" opacity="0.55"/>
+      <line x1="7" y1="9" x2="11" y2="25" stroke="#e94560" stroke-width="1" stroke-linecap="round" opacity="0.55"/>
+      <line x1="31" y1="11" x2="27" y2="24" stroke="#e94560" stroke-width="1" stroke-linecap="round" opacity="0.55"/>
+      <line x1="11" y1="25" x2="19" y2="27" stroke="#e94560" stroke-width="1" stroke-linecap="round" opacity="0.55"/>
+      <line x1="19" y1="27" x2="27" y2="24" stroke="#e94560" stroke-width="1" stroke-linecap="round" opacity="0.55"/>
+      <line x1="11" y1="25" x2="9" y2="43" stroke="#e94560" stroke-width="1" stroke-linecap="round" opacity="0.55"/>
+      <line x1="27" y1="24" x2="33" y2="41" stroke="#e94560" stroke-width="1" stroke-linecap="round" opacity="0.55"/>
+      <circle cx="7" cy="9" r="2.6" fill="#e94560"/>
+      <circle cx="31" cy="11" r="2" fill="#e94560"/>
+      <circle cx="11" cy="25" r="1.8" fill="#e94560"/>
+      <circle cx="19" cy="27" r="1.8" fill="#e94560"/>
+      <circle cx="27" cy="24" r="1.8" fill="#e94560"/>
+      <circle cx="9" cy="43" r="2" fill="#e94560"/>
+      <circle cx="33" cy="41" r="3" fill="#e94560"/>
+    </svg>
+    An Orion 11 Project
+  </div>
+  <h1>Policing &amp; Disability:<br><span>A Data-Driven Analysis</span> (2020–2024)</h1>
+  <p class="subtitle">An examination of fatal police encounters involving people with mental illness and disabilities in the United States. Data compiled from the Washington Post Fatal Force Database, Mapping Police Violence, the Treatment Advocacy Center, Ruderman Family Foundation, and CDC NVDRS.</p>
+  <div class="kpi-grid">
+    <div class="kpi-card fade-in">
+      <div class="kpi-num coral">2,053</div>
+      <div class="kpi-label">People with mental health conditions fatally shot by police (2015–2024)</div>
+      <div class="kpi-source">Washington Post Fatal Force / MindSite News</div>
+    </div>
+    <div class="kpi-card fade-in" style="animation-delay:.1s">
+      <div class="kpi-num amber">33–<br>50%</div>
+      <div class="kpi-label">of people killed by police have disabilities — including physical, intellectual, developmental, and sensory disabilities</div>
+      <div class="kpi-source">Ruderman Family Foundation</div>
+    </div>
+    <div class="kpi-card fade-in" style="animation-delay:.2s">
+      <div class="kpi-num amber">16×</div>
+      <div class="kpi-label">higher risk of being killed for people with untreated serious mental illness</div>
+      <div class="kpi-source">Treatment Advocacy Center</div>
+    </div>
+    <div class="kpi-card fade-in" style="animation-delay:.3s">
+      <div class="kpi-num coral">1,365</div>
+      <div class="kpi-label">Total police killings in 2024 — deadliest year on record</div>
+      <div class="kpi-source">Mapping Police Violence / Campaign Zero</div>
+    </div>
+    <div class="kpi-card fade-in" style="animation-delay:.4s">
+      <div class="kpi-num teal">0</div>
+      <div class="kpi-label">Fatalities across all major co-responder programs</div>
+      <div class="kpi-source">CAHOOTS, STAR, B-HEARD, PSR &amp; others</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- TRENDS -->
+<section class="section" id="trends">
+<div class="container">
+  <div class="section-eyebrow">Section 1</div>
+  <h2 class="section-title">Annual Trend: Fatal Police Shootings &amp; Mental Illness (2020–2024)</h2>
+  <p class="section-sub">Tracking Washington Post Fatal Force Database records of fatal shootings by on-duty officers, and the subset flagged as involving mental illness or behavioral health crisis. Data limited to 2020–2024, the most recent complete WaPo dataset year.</p>
+
+  <div class="chart-wrap">
+    <div class="chart-title">WaPo Fatal Shootings vs. Mental Illness–Related Shootings (2020–2024)</div>
+    <div class="chart-sub">Left axis: Total WaPo fatal shootings (on-duty officers, all causes) &nbsp;|&nbsp; Right axis: WaPo shootings flagged as mental illness–related (count). Source: Washington Post Fatal Force Database only.</div>
+    <canvas id="trendChart" height="90"></canvas>
+    <p class="chart-note">⚠ The dashed line marks a <strong>WaPo methodology change</strong> between 2020 and 2021: the field was renamed from <code>signs_of_mental_illness</code> to <code>was_mental_illness_related</code>, causing an apparent drop in flagged cases that likely reflects reclassification, not a true decline. Source: <a href="https://github.com/washingtonpost/data-police-shootings" target="_blank" rel="noopener">Washington Post Fatal Force Database</a>.</p>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">% of WaPo Fatal Shootings Flagged as Mental Illness–Related</div>
+    <div class="chart-sub">Axis shows percentage (%) of total WaPo fatal shootings where was_mental_illness_related = True. Academic studies using NVDRS data find rates ~2× higher (23–32%).</div>
+    <canvas id="pctChart" height="70"></canvas>
+    <p class="chart-note">Note: The 2020→2021 apparent drop likely reflects WaPo's field rename (signs_of_mental_illness → was_mental_illness_related) rather than a true decline. Academic studies find 23–32% of fatal encounters involve mental/behavioral health conditions. Source: <a href="https://github.com/washingtonpost/data-police-shootings" target="_blank" rel="noopener">Washington Post Fatal Force Database GitHub CSV</a>.</p>
+  </div>
+</div>
+</section>
+
+<!-- MAP -->
+<section class="section" id="map">
+<div class="container">
+  <div class="section-eyebrow">Section 2</div>
+  <h2 class="section-title">Geographic Distribution: Fatal Police Shootings by State</h2>
+  <p class="section-sub">Rate per million residents, 2020–2024 combined (WaPo data — fatal shootings only). Western and Southern states consistently show the highest rates. Color scale from low (dark teal) to high (coral/red).</p>
+
+  <div class="state-grid" id="stateGrid"></div>
+  <div class="map-legend">
+    <span>Low</span>
+    <div class="legend-bar"></div>
+    <span>High</span>
+    <span style="margin-left:16px;color:#4a5f7a">(Fatal shootings per million residents, 2020–2024)</span>
+  </div>
+
+  <div class="map-tables">
+    <div class="card">
+      <div class="map-table-title">Top 5 States — Rate Per Million</div>
+      <div class="rank-row"><span class="rank-state">New Mexico</span><span class="rank-val">56.2</span></div>
+      <div class="rank-row"><span class="rank-state">Alaska</span><span class="rank-val">47.7</span></div>
+      <div class="rank-row"><span class="rank-state">Montana</span><span class="rank-val">38.7</span></div>
+      <div class="rank-row"><span class="rank-state">Wyoming</span><span class="rank-val">38.1</span></div>
+      <div class="rank-row"><span class="rank-state">Colorado</span><span class="rank-val">35.0</span></div>
+    </div>
+    <div class="card">
+      <div class="map-table-title">Top 5 States — Absolute Count</div>
+      <div class="rank-row"><span class="rank-state">California</span><span class="rank-val">665</span></div>
+      <div class="rank-row"><span class="rank-state">Texas</span><span class="rank-val">568</span></div>
+      <div class="rank-row"><span class="rank-state">Florida</span><span class="rank-val">367</span></div>
+      <div class="rank-row"><span class="rank-state">Arizona</span><span class="rank-val">230</span></div>
+      <div class="rank-row"><span class="rank-state">Georgia</span><span class="rank-val">~180</span></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- INCIDENTS -->
+<section class="section" id="incidents">
+<div class="container">
+  <div class="section-eyebrow">Section 3</div>
+  <h2 class="section-title">Notable Recent Incidents (2024–2026)</h2>
+  <p class="section-sub">While the Washington Post flagged 175 fatal shootings involving mental illness in 2024 alone, the following table highlights specific cases that have drawn media scrutiny or illustrate specific systemic failures — such as the absence of a co-responder, involvement of an individual with a developmental disability, or a call that was initiated by the person in crisis or their family.</p>
+
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;padding:10px 16px;background:rgba(0,180,216,.06);border:1px solid rgba(0,180,216,.2);border-radius:var(--radius-sm)">
+    <div style="font-size:12px;color:var(--teal)"><strong>&#9679; Live Tracker</strong> — This database is maintained independently of WaPo/MPV. New cases are added automatically each day via news search.</div>
+    <div style="font-size:11px;color:var(--text-muted)" id="trackerTimestamp">Loading…</div>
+  </div>
+
+  <div class="table-controls">
+    <input type="text" class="search-input" id="searchInput" placeholder="Search by name, location, or condition…" oninput="filterTable()">
+    <select class="filter-select" id="armedFilter" onchange="filterTable()">
+      <option value="">All (armed status)</option>
+      <option value="Unarmed">Unarmed</option>
+      <option value="Armed">Armed</option>
+    </select>
+    <select class="filter-select" id="yearFilter" onchange="filterTable()">
+      <option value="">All years</option>
+      <option value="2024">2024</option>
+      <option value="2025">2025</option>
+      <option value="2026">2026</option>
+    </select>
+  </div>
+
+  <div class="incidents-table-wrap">
+    <table id="incidentsTable">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Location</th>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Race</th>
+          <th>Condition / Behavioral Health Crisis</th>
+          <th>Armed Status</th>
+          <th>Source</th>
+        </tr>
+      </thead>
+      <tbody id="incidentsTbody"></tbody>
+    </table>
+  </div>
+  <p class="chart-note" style="margin-top:12px">Highlighted rows (red left border) = Virginia incidents. Data sources: Washington Post Fatal Force Database, news reports, state AG investigation reports. This list is not exhaustive — WaPo identified 175 MH-flagged fatal shootings in 2024 alone.</p>
+</div>
+</section>
+
+<!-- CO-RESPONDER -->
+<section class="section" id="coresponder">
+<div class="container">
+  <div class="section-eyebrow">Section 4</div>
+  <h2 class="section-title">Co-Responder &amp; Alternative Response Programs</h2>
+  <p class="section-sub">Programs that divert mental health 911 calls away from police-only response. Diversion here means calls resolved without arrest or hospitalization — documented outcomes across all program models.</p>
+
+  <div class="donut-row">
+    <div class="donut-wrap">
+      <canvas id="donutChart" width="240" height="240" style="max-width:240px"></canvas>
+      <div class="donut-center">
+        <div class="num">46</div>
+        <div class="lbl">Programs<br>Tracked</div>
+      </div>
+    </div>
+    <div>
+      <div class="legend-items">
+        <div class="legend-item"><div class="legend-dot" style="background:#00b4d8"></div><span><strong>Comprehensive (5)</strong> — Citywide or regional alternative response operating 16+ hrs/day, documented diversion outcomes (&gt;94% resolved without arrest or ER transport)</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:#1a5272"></div><span><strong>Developing (32)</strong> — Co-responder or MH unit embedded with police; growing but limited hours/coverage</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:#2a3f56"></div><span><strong>Limited (2)</strong> — Pilot or partial programs; insufficient outcome data published</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:#1a2235"></div><span><strong>Unknown (7)</strong> — Reported but no public outcome data available</span></div>
+      </div>
+      <div class="zero-badge mt-16">✓ Diversion rate: 94–99%+ of calls resolved without police escalation</div>
+    </div>
+  </div>
+  <p class="chart-note" style="margin-top:12px"><strong>Context Note:</strong> Co-responder programs are typically dispatched to lower-acuity, non-violent calls via 911 triage protocols, whereas armed police respond to calls involving weapons. These diversion and outcome rates reflect fundamentally different risk environments and call types — direct comparisons of fatality rates between the two should account for this selection effect.</p>
+
+  <h3 style="font-family:var(--font-head);font-size:18px;font-weight:700;color:#fff;margin-bottom:16px">Leading Programs</h3>
+  <div class="program-grid">
+    <div class="prog-card">
+      <div class="prog-name">CAHOOTS</div>
+      <div class="prog-loc">Eugene/Springfield, OR — Since 1989</div>
+      <div class="prog-stat"><span>Calls/year</span><span class="prog-stat-val">~17,000</span></div>
+      <div class="prog-stat"><span>Police backup needed</span><span class="prog-stat-val green">1.3%</span></div>
+      <div class="prog-stat"><span>Arrest reduction (diversion from arrest)</span><span class="prog-stat-val green">24.3pp</span></div>
+      <div class="prog-stat"><span>Budget</span><span class="prog-stat-val amber">$2M</span></div>
+    </div>
+    <div class="prog-card">
+      <div class="prog-name">STAR</div>
+      <div class="prog-loc">Denver, CO — Since 2020</div>
+      <div class="prog-stat"><span>Calls/year</span><span class="prog-stat-val">~7,657</span></div>
+      <div class="prog-stat"><span>Crime reduction (pilot area)</span><span class="prog-stat-val green">34%</span></div>
+      <div class="prog-stat"><span>Zero arrests on STAR-only calls</span><span class="prog-stat-val green">0 on STAR calls</span></div>
+      <div class="prog-stat"><span>Budget</span><span class="prog-stat-val amber">$6.2M</span></div>
+    </div>
+    <div class="prog-card">
+      <div class="prog-name">B-HEARD</div>
+      <div class="prog-loc">New York City, NY — Since 2021</div>
+      <div class="prog-stat"><span>Calls/year</span><span class="prog-stat-val">~14,900</span></div>
+      <div class="prog-stat"><span>Eligible call coverage</span><span class="prog-stat-val green">65%</span></div>
+      <div class="prog-stat"><span>Patient satisfaction</span><span class="prog-stat-val green">99%</span></div>
+      <div class="prog-stat"><span>Budget</span><span class="prog-stat-val amber">$12.5M</span></div>
+    </div>
+    <div class="prog-card">
+      <div class="prog-name">Portland Street Response</div>
+      <div class="prog-loc">Portland, OR — Since 2021</div>
+      <div class="prog-stat"><span>Calls diverted/year</span><span class="prog-stat-val">7,400+</span></div>
+      <div class="prog-stat"><span>Required police co-response</span><span class="prog-stat-val green">6%</span></div>
+      <div class="prog-stat"><span>Arrests from PSR calls (diversion from jail)</span><span class="prog-stat-val green">1 total</span></div>
+      <div class="prog-stat"><span>Budget</span><span class="prog-stat-val amber">$10M</span></div>
+    </div>
+    <div class="prog-card">
+      <div class="prog-name">Albuquerque Community Safety</div>
+      <div class="prog-loc">Albuquerque, NM — Since 2021</div>
+      <div class="prog-stat"><span>Calls FY2024</span><span class="prog-stat-val">40,191</span></div>
+      <div class="prog-stat"><span>Required police call-out</span><span class="prog-stat-val green">&lt;1%</span></div>
+      <div class="prog-stat"><span>Growth FY22→FY24</span><span class="prog-stat-val green">347%</span></div>
+      <div class="prog-stat"><span>Budget</span><span class="prog-stat-val amber">$17M</span></div>
+    </div>
+    <div class="prog-card">
+      <div class="prog-name">Minneapolis BCR</div>
+      <div class="prog-loc">Minneapolis, MN — Since 2021</div>
+      <div class="prog-stat"><span>Calls/year</span><span class="prog-stat-val">8,000</span></div>
+      <div class="prog-stat"><span>Total calls since 2021</span><span class="prog-stat-val">30,000+</span></div>
+      <div class="prog-stat"><span>Serious injuries (diversion from MH unit)</span><span class="prog-stat-val green">0</span></div>
+      <div class="prog-stat"><span>Budget</span><span class="prog-stat-val amber">$5.9M</span></div>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--font-head);font-size:18px;font-weight:700;color:#fff;margin:32px 0 16px">Measured Effectiveness</h3>
+  <div class="eff-grid">
+    <div class="card">
+      <div class="card-label">Diversion Rates (calls resolved without arrest or ER transport)</div>
+      <div class="eff-stat"><span>CAHOOTS — calls needing police backup</span><span class="eff-val">1.3% (diversion: 98.7%)</span></div>
+      <div class="eff-stat"><span>STAR — arrests on STAR-only calls</span><span class="eff-val">0 (diversion: ~100%)</span></div>
+      <div class="eff-stat"><span>Fairfax MCRC diversion from arrest/jail</span><span class="eff-val">74% diverted</span></div>
+      <div class="eff-stat"><span>NoVA Marcus Alert calls resolved by BH team</span><span class="eff-val">71% diverted</span></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Outcome: Safety &amp; Cost</div>
+      <div class="eff-stat"><span>CAHOOTS police backup needed</span><span class="eff-val">1.3%</span></div>
+      <div class="eff-stat"><span>STAR cost vs. police-only response</span><span class="eff-val">~25% of cost</span></div>
+      <div class="eff-stat"><span>Clinicians present in MBH police shootings</span><span class="eff-val" style="color:var(--coral)">1%</span></div>
+      <div class="eff-stat"><span>Fatal outcomes in any major alt. program</span><span class="eff-val">0</span></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- VIRGINIA -->
+<section class="section" id="virginia">
+<div class="container">
+  <div class="section-eyebrow">Section 5</div>
+  <h2 class="section-title">Virginia Focus: Policy, Incidents &amp; the Marcus Alert</h2>
+  <p class="section-sub">Virginia enacted the Marcus Alert Act in 2021 — one of the most ambitious state-level crisis response reforms in the country. Implementation is uneven and critical gaps remain.</p>
+
+  <div class="stat-row">
+    <div class="stat-item"><div class="stat-num">17</div><div class="stat-label">CSBs with Marcus Alert active (of 40 statewide)</div></div>
+    <div class="stat-item"><div class="stat-num">67%</div><div class="stat-label">Virginia population covered</div></div>
+    <div class="stat-item"><div class="stat-num">110</div><div class="stat-label">Mobile crisis teams statewide (up from 36)</div></div>
+    <div class="stat-item"><div class="stat-num">$42M+</div><div class="stat-label">General Assembly funding since FY2021</div></div>
+    <div class="stat-item"><div class="stat-num">135,665</div><div class="stat-label">988 calls routed to Virginia in 2024</div></div>
+  </div>
+
+  <h3 style="font-family:var(--font-head);font-size:18px;font-weight:700;color:#fff;margin-bottom:16px">Key Incidents — Northern Virginia</h3>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div>
+        <div class="tl-meta">2022 — Herndon, Fairfax County</div>
+        <div class="tl-name">Jasper Aaron Lynch</div>
+        <div class="tl-desc">26-year-old White man shot during a mental health crisis. One of two Fairfax County mental health–related fatal police shootings identified in the Washington Post database (2015–2024). No co-responder clinician was present. No charges filed.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div>
+        <div class="tl-meta">2023 — Henrico County</div>
+        <div class="tl-name">Irvo Otieno</div>
+        <div class="tl-desc">28-year-old Black man with mental illness killed while being admitted to Central State Hospital. Ten people charged — zero convictions. All charges were nolle prossed or resulted in acquittal by November 2024. Led to significant national debate about systemic accountability.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div>
+        <div class="tl-meta">2024 — Reston, Fairfax County</div>
+        <div class="tl-name">Sydney Wilson</div>
+        <div class="tl-desc">33-year-old Black woman shot during a mental health crisis welfare check. CIT-trained officer responded alone — no co-responder clinician present. Led to police auditor's landmark recommendation to <strong>reconsider police role</strong> in behavioral health calls.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot teal"></div>
+      <div>
+        <div class="tl-meta teal">2024 — Rosslyn, Arlington</div>
+        <div class="tl-name">Cedric Butler</div>
+        <div class="tl-desc">27-year-old shot at Rosslyn Metro Station entrance after displaying a knife. Regional Critical Incident Response Team investigated.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--font-head);font-size:18px;font-weight:700;color:#fff;margin-bottom:16px">Marcus Alert Implementation</h3>
+  <div class="marcus-grid">
+    <div class="marcus-card">
+      <div class="marcus-card-title">Northern Virginia — All 5 CSBs Implemented</div>
+      <div class="marcus-row"><span>Prince William County</span><span class="marcus-val">Dec 2021</span></div>
+      <div class="marcus-row"><span>Fairfax-Falls Church CSB</span><span class="marcus-val">Jul 2023</span></div>
+      <div class="marcus-row"><span>Alexandria CSB</span><span class="marcus-val">Jul 2024</span></div>
+      <div class="marcus-row"><span>Arlington CSB</span><span class="marcus-val">Jul 2024</span></div>
+      <div class="marcus-row"><span>Loudoun County</span><span class="marcus-val">Jul 2024</span></div>
+    </div>
+    <div class="marcus-card">
+      <div class="marcus-card-title">Effectiveness Metrics (2022 → 2024)</div>
+      <div class="marcus-row"><span>Behavioral health response rate</span><span class="marcus-val">10% → 22%</span></div>
+      <div class="marcus-row"><span>CIT officer dispatch rate</span><span class="marcus-val">56% → 69%</span></div>
+      <div class="marcus-row"><span>911 → 988 transfer rate</span><span class="marcus-val" style="color:var(--coral)">~6% (far below target)</span></div>
+      <div class="marcus-row"><span>Law enforcement-only response</span><span class="marcus-val" style="color:var(--coral)">69% (still dominant)</span></div>
+      <div class="marcus-row"><span>Mobile crisis teams statewide</span><span class="marcus-val">36 → 110</span></div>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--font-head);font-size:18px;font-weight:700;color:var(--coral);margin:28px 0 14px">Critical Gaps</h3>
+  <div class="gaps-list">
+    <div class="gap-item"><span class="gap-icon">⚠</span><span>$600K/CSB funding formula identified as inadequate regardless of locality size ($42M total since FY2021)</span></div>
+    <div class="gap-item"><span class="gap-icon">⚠</span><span>Evaluation Task Force created by law has <strong>never met</strong></span></div>
+    <div class="gap-item"><span class="gap-icon">⚠</span><span>No statewide evidence of reduced arrests or use of force post–Marcus Alert implementation</span></div>
+    <div class="gap-item"><span class="gap-icon">⚠</span><span>13 CSBs have not yet received any planning funding — 2028 deadline at risk</span></div>
+    <div class="gap-item"><span class="gap-icon">⚠</span><span>Co-responder teams were unavailable at time of both Lynch (2022) and Wilson (2024) fatal shootings in Fairfax</span></div>
+    <div class="gap-item" style="border-color:rgba(0,180,216,.25);background:rgba(0,180,216,.05)"><span class="gap-icon" style="color:var(--teal)">🔍</span><span><strong>Data Gap:</strong> Because Virginia does not mandate centralized tracking of disability status in police use-of-force incidents, local advocates must rely on national baselines. Without disaggregated, disability-specific data at the local level, it is impossible to confirm whether Marcus Alert implementation has reduced harm to Virginians with disabilities specifically.</span></div>
+  </div>
+</div>
+</section>
+
+<!-- ACTION -->
+<section class="section" id="action">
+<div class="container">
+  <div class="section-eyebrow">Section 6</div>
+  <h2 class="section-title">Policy Recommendations &amp; Advocacy Actions</h2>
+  <p class="section-sub">Evidence-based recommendations drawn from program evaluations, state reports, and disability advocacy research. Prioritized for the Northern Virginia and Virginia policy context.</p>
+
+  <div class="action-grid">
+    <div class="action-card">
+      <div class="action-num">01</div>
+      <div class="action-title">Fund 24/7 Co-Responder Coverage</div>
+      <div class="action-body">Expand co-responder teams in Arlington and Fairfax to 24/7 operations. Current MOST program (Arlington) operates 1pm–9pm weekdays only — both the Lynch (2022) and Wilson (2024) fatal encounters fell outside covered hours. Model after CAHOOTS 24/7 model. Source: <a href="https://www.arlnow.com/2024/04/19/arlington-crisis-response-team-may-get-more-staff-and-expanded-hours/" target="_blank" rel="noopener">ARLnow 2024</a>.</div>
+    </div>
+    <div class="action-card">
+      <div class="action-num">02</div>
+      <div class="action-title">Convene the Marcus Alert Evaluation Task Force</div>
+      <div class="action-body">Virginia law required creation of a Marcus Alert Evaluation Task Force — it has <em>never met</em>. Disability advocacy organizations (Arc of Northern Virginia, ECNV) should demand immediate convening and public reporting on outcomes data, including disaggregated disability and race data. Source: <a href="https://bhc.virginia.gov/documents/Marcus%20Alert-%20Final%20report.pdf" target="_blank" rel="noopener">BHC Marcus Alert Report</a>.</div>
+    </div>
+    <div class="action-card">
+      <div class="action-num">03</div>
+      <div class="action-title">Mandate Disability Training in All Police Agencies</div>
+      <div class="action-body">Only 20 states require law enforcement training on IDD/autism. Virginia should mandate specific training on intellectual disability, autism, and communication differences for all officers — not just CIT-designated personnel. Source: <a href="https://thearc.org/blog/statement-on-the-police-killing-of-an-idaho-autistic-teen/" target="_blank" rel="noopener">The Arc, 2025</a>.</div>
+    </div>
+    <div class="action-card">
+      <div class="action-num">04</div>
+      <div class="action-title">Increase CSB Funding Equity</div>
+      <div class="action-body">Replace the flat $600K/CSB formula with population-adjusted and need-based funding. Current formula is explicitly identified as inadequate in the BHC September 2025 report. 13 CSBs have received zero planning funds — jeopardizing the 2028 statewide implementation deadline.</div>
+    </div>
+    <div class="action-card">
+      <div class="action-num">05</div>
+      <div class="action-title">Implement Federal Disability Tracking</div>
+      <div class="action-body">Advocate for federal legislation requiring mandatory tracking of disability status in all use-of-force and police killing reports. FBI's National Use-of-Force Data Collection (2019) does not include disability. Without data, systemic change is unmeasurable. Source: <a href="https://www.tac.org/criminalization/" target="_blank" rel="noopener">Treatment Advocacy Center</a>.</div>
+    </div>
+    <div class="action-card">
+      <div class="action-num">06</div>
+      <div class="action-title">Scale 988 / Crisis Line Access</div>
+      <div class="action-body">Virginia's 911→988 transfer rate is only ~6%, far below targets. Advocate for dispatcher training, system integration, and public awareness campaigns. 988 call volume in Virginia grew 148% Sept 2023→Sept 2024 — but chat (39%) and text (37%) answer rates lag severely. Source: <a href="https://rga.lis.virginia.gov/Published/2026/RD177/PDF" target="_blank" rel="noopener">DBHDS FY2026 Report</a>.</div>
+    </div>
+  </div>
+
+  <div class="card mt-24" style="border-color:rgba(244,162,97,.3);background:rgba(244,162,97,.05)">
+    <div style="font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#f4a261;margin-bottom:4px">⚠ Key Data Limitations — Interpret With Care</div>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;line-height:1.6">This dashboard presents the best available public data on police encounters involving people with mental illness and disabilities. Every dataset below has significant structural limitations that affect interpretation. Do not treat any figure as definitive.</p>
+    <ul style="margin-top:12px;padding-left:18px;font-size:13px;color:var(--text-muted);display:grid;grid-template-columns:1fr 1fr;gap:8px 32px;line-height:1.7">
+      <li>WaPo Fatal Force covers only fatal <em>shootings</em> — excludes Taser, restraint, vehicle deaths</li>
+      <li>MI flag in WaPo data relies on media reports; academic studies find rates 1.5–2× higher</li>
+      <li>No federal mandatory tracking of disability status in police killings exists</li>
+      <li>WaPo public CSV ends December 2024; 2025–2026 data from MPV only</li>
+      <li>Black victims are less likely to be recorded as having mental illness, compounding disparities</li>
+      <li>Disability % (33–50%) is from academic/advocacy case reviews, not continuous surveillance</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+
+<!-- LIVE MONITOR (auto-populated from orion_data.json; stays hidden if the file is absent) -->
+<section class="section" id="livemonitor" style="display:none">
+<div class="container">
+  <div class="section-eyebrow">Section 7</div>
+  <h2 class="section-title">Live Source Monitor</h2>
+  <p class="section-sub">Ongoing counts from ECNV's automated monitoring of official police and state data sources (agency tables, state datasets, and press releases), cross-checked against national databases. Every record below passed through a verification pipeline with human review of uncertain matches. Counts only — no individual-level details are published here. Last updated: <strong id="lm-updated">—</strong>.</p>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="kpi-card">
+      <div class="kpi-num coral" id="lm-total">—</div>
+      <div class="kpi-label">Incidents tracked</div>
+      <div class="kpi-source">ECNV Source Monitor</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num teal" id="lm-confirmed">—</div>
+      <div class="kpi-label">Confirmed by multiple sources</div>
+      <div class="kpi-source">ECNV Source Monitor</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num amber" id="lm-fatal">—</div>
+      <div class="kpi-label">Fatal outcomes</div>
+      <div class="kpi-source">ECNV Source Monitor</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num green" id="lm-sources">—</div>
+      <div class="kpi-label">Official sources monitored</div>
+      <div class="kpi-source">ECNV Source Monitor</div>
+    </div>
+  </div>
+
+  <div class="chart-wrap" style="margin-top:24px">
+    <div class="chart-title">Tracked Incidents by Year</div>
+    <div class="chart-sub">Count of verified and provisional incidents in the ECNV monitoring database, by incident year.</div>
+    <canvas id="lmYearChart" height="80" role="img" aria-label="Bar chart of tracked incidents by year"></canvas>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Recent Months</div>
+    <div class="chart-sub">Monthly counts for the most recent 24 months of tracked incidents.</div>
+    <canvas id="lmMonthChart" height="70" role="img" aria-label="Line chart of tracked incidents per month, last 24 months"></canvas>
+    <p class="chart-note">These counts come from ECNV's own source-monitoring pipeline and are separate from the published research figures above. They update each time the monitoring database exports new aggregates. No names, locations, or case details are included in the published data file.</p>
+  </div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-orion">An Orion 11 Project</div>
+    <div class="footer-creator">Created by Joe Albert</div>
+    <p>Data compiled March 2026. All statistics sourced from publicly available databases and published research.</p>
+    <p style="margin-top:6px">Primary sources: <a href="https://github.com/washingtonpost/data-police-shootings" target="_blank" rel="noopener">Washington Post Fatal Force Database</a> · <a href="https://mappingpoliceviolence.us" target="_blank" rel="noopener">Mapping Police Violence</a> · <a href="https://www.tac.org" target="_blank" rel="noopener">Treatment Advocacy Center</a> · <a href="https://rudermanfoundation.org" target="_blank" rel="noopener">Ruderman Family Foundation</a> · <a href="https://bhc.virginia.gov" target="_blank" rel="noopener">Virginia BHC</a></p>
+    <p style="margin-top:8px"><a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener">Built with Perplexity Computer</a></p>
+  </div>
+</footer>
+
+<script>
+/* ========== ACTIVE TRACKER — loads from incidents.json ========== */
+let allIncidents = [];
+
+function renderTable(data){
+  const tbody = document.getElementById('incidentsTbody');
+  const count = document.getElementById('incidentCount');
+  if(count) count.textContent = data.length + ' case' + (data.length!==1?'s':'');
+  tbody.innerHTML = data.length ? data.map(r=>`
+    <tr class="${r.va?'highlight':''}">
+      <td>${r.date}</td>
+      <td>${r.city}, ${r.state}${r.va?' <span class="tag va">VA</span>':''}</td>
+      <td><strong>${r.name}</strong></td>
+      <td>${r.age}</td>
+      <td>${r.race}</td>
+      <td>${r.condition}</td>
+      <td><span class="tag ${r.armed.toLowerCase().startsWith('unarmed')?'unarmed':'armed'}">${r.armed}</span></td>
+      <td>${r.url?`<a class="source-link" href="${r.url}" target="_blank" rel="noopener noreferrer">Source ↗</a>`:''}</td>
+    </tr>`).join('') : '<tr><td colspan="8" style="text-align:center;color:#4a5f7a;padding:24px">No matching cases found.</td></tr>';
+}
+
+function filterTable(){
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  const armed=document.getElementById('armedFilter').value.toLowerCase();
+  const year=document.getElementById('yearFilter').value;
+  const filtered=allIncidents.filter(r=>{
+    const text=(r.name+r.city+r.state+r.condition).toLowerCase();
+    const matchQ=!q||text.includes(q);
+    const matchArmed=!armed||(armed==='unarmed'?r.armed.toLowerCase().startsWith('unarmed'):!r.armed.toLowerCase().startsWith('unarmed'));
+    const matchYear=!year||r.date.startsWith(year);
+    return matchQ&&matchArmed&&matchYear;
+  });
+  renderTable(filtered);
+}
+
+// Fetch tracker database — updated daily by automated search
+fetch('incidents.json?v='+Date.now())
+  .then(r=>r.json())
+  .then(data=>{
+    // Sort newest first
+    allIncidents = data.sort((a,b)=>b.date.localeCompare(a.date));
+    renderTable(allIncidents);
+    const ts = document.getElementById('trackerTimestamp');
+    if(ts) ts.textContent = 'Tracker loaded: ' + allIncidents.length + ' cases on record';
+  })
+  .catch(()=>{
+    document.getElementById('incidentsTbody').innerHTML =
+      '<tr><td colspan="8" style="text-align:center;color:#e94560;padding:24px">Could not load tracker database.</td></tr>';
+  });
+
+/* ========== TREND CHART ========== */
+const methodologyLinePlugin={
+  id:'methodologyLine',
+  afterDraw(chart){
+    const {ctx,chartArea:{top,bottom},scales:{x}}=chart;
+    const x0=x.getPixelForValue('2020');
+    const x1=x.getPixelForValue('2021');
+    const xMid=(x0+x1)/2;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(xMid,top);
+    ctx.lineTo(xMid,bottom);
+    ctx.strokeStyle='rgba(244,162,97,.65)';
+    ctx.lineWidth=1.5;
+    ctx.setLineDash([5,4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='#f4a261';
+    ctx.font='bold 9px Inter,sans-serif';
+    ctx.textAlign='center';
+    ctx.fillText('WaPo Methodology',xMid,top+13);
+    ctx.fillText('Change',xMid,top+25);
+    ctx.restore();
+  }
+};
+const tCtx=document.getElementById('trendChart').getContext('2d');
+new Chart(tCtx,{
+  type:'bar',
+  data:{
+    labels:['2020','2021','2022','2023','2024'],
+    datasets:[
+      {label:'WaPo Fatal Shootings (all causes)',data:[1021,1050,1097,1164,1175],backgroundColor:'rgba(233,69,96,.22)',borderColor:'rgba(233,69,96,.5)',borderWidth:1,order:2},
+      {label:'Mental Illness–Related Shootings (WaPo)',data:[223,153,158,161,175],type:'line',borderColor:'#f4a261',backgroundColor:'rgba(244,162,97,.1)',pointBackgroundColor:'#f4a261',pointRadius:5,tension:.4,yAxisID:'y2',order:1}
+    ]
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{labels:{color:'#7a8fa8',font:{size:11}}}},
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#7a8fa8'}},
+      y:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#7a8fa8'},title:{display:true,text:'WaPo Fatal Shootings (count)',color:'#7a8fa8',font:{size:11}}},
+      y2:{position:'right',grid:{display:false},ticks:{color:'#f4a261'},title:{display:true,text:'Mental Illness–Related (count)',color:'#f4a261',font:{size:11}}}
+    }
+  },
+  plugins:[methodologyLinePlugin]
+});
+
+/* ========== PCT CHART ========== */
+const pCtx=document.getElementById('pctChart').getContext('2d');
+new Chart(pCtx,{
+  type:'line',
+  data:{
+    labels:['2020','2021','2022','2023','2024'],
+    datasets:[{
+      label:'% Fatal Shootings Involving Mental Illness (WaPo)',
+      data:[21.8,14.6,14.4,13.8,14.9],
+      borderColor:'#00b4d8',backgroundColor:'rgba(0,180,216,.08)',
+      pointBackgroundColor:'#00b4d8',pointRadius:5,tension:.4,fill:true
+    }]
+  },
+  options:{
+    responsive:true,plugins:{legend:{labels:{color:'#7a8fa8',font:{size:11}}}},
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#7a8fa8'}},
+      y:{min:0,max:30,grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#7a8fa8',callback:v=>v+'%'},title:{display:true,text:'Percentage (%)',color:'#7a8fa8',font:{size:11}}}
+    }
+  }
+});
+
+/* ========== DONUT CHART ========== */
+const dCtx=document.getElementById('donutChart').getContext('2d');
+new Chart(dCtx,{
+  type:'doughnut',
+  data:{
+    labels:['Comprehensive (5)','Developing (32)','Limited (2)','Unknown (7)'],
+    datasets:[{data:[5,32,2,7],backgroundColor:['#00b4d8','#1a5272','#2a3f56','#1a2235'],borderColor:'#0d1117',borderWidth:2}]
+  },
+  options:{responsive:false,cutout:'72%',plugins:{legend:{display:false}}}
+});
+
+/* ========== STATE MAP ========== */
+const stateRates={WA:20.8,OR:24.5,CA:16.8,ID:27.7,NV:28.7,AZ:32.2,MT:38.7,WY:38.1,UT:22.4,CO:35.0,NM:56.2,ND:18.2,SD:22.1,NE:17.6,KS:22.8,OK:29.0,TX:19.5,MN:13.2,IA:11.8,MO:20.4,AR:22.6,LA:19.3,WI:10.2,IL:9.8,MI:11.1,IN:18.9,OH:13.6,KY:16.4,TN:24.0,MS:18.7,AL:21.3,GA:17.0,FL:17.0,SC:19.4,NC:16.8,VA:12.4,WV:17.3,MD:8.6,DE:14.2,PA:9.8,NJ:5.2,NY:5.4,CT:6.8,RI:7.2,MA:4.8,VT:14.1,NH:10.6,ME:12.3,HI:10.4,AK:47.7,DC:9.2};
+const maxRate=Math.max(...Object.values(stateRates));
+
+function rateToColor(rate){
+  const t=rate/maxRate;
+  if(t<0.3){const b=t/0.3;return`rgb(${Math.round(26+b*0)},${Math.round(74+b*106)},${Math.round(110+b*110)})`}
+  const b=(t-0.3)/0.7;
+  const r=Math.round(26+b*(233-26));
+  const g=Math.round(180-b*180);
+  const bl=Math.round(216-b*216);
+  return`rgb(${r},${g},${bl})`;
+}
+
+const gridLayout=[
+  [null,null,null,null,null,null,null,null,null,null,'ME',null],
+  [null,'WA','MT',null,'ND','MN',null,'IL','MI',null,'VT','NH'],
+  [null,'OR','ID','WY','SD','WI','MI','IN','OH','PA','NY','MA'],
+  [null,'CA','NV','UT','CO','NE','IA','MO','KY','WV','NJ','RI'],
+  [null,null,'AZ','NM','KS','MO','IL','TN','VA','MD','DE','CT'],
+  [null,null,null,null,'OK','AR','MS','AL','NC','SC',null,null],
+  ['AK','HI',null,'TX',null,'LA',null,'GA','FL',null,null,null],
+];
+
+const dedupLayout=[
+  [null,null,null,null,null,null,null,null,null,null,'ME',null],
+  ['WA',null,'MT',null,'ND','MN',null,null,null,null,'VT','NH'],
+  ['OR','ID',null,'WY','SD','WI','MI',null,'OH','PA','NY','MA'],
+  ['CA','NV','UT','CO','NE','IA','MO','KY','WV',null,'NJ','RI'],
+  [null,'AZ','NM','KS',null,'AR','TN','VA','MD','DE',null,'CT'],
+  [null,null,'TX','OK','LA','MS','AL','NC','SC','GA',null,null],
+  ['AK','HI',null,null,null,null,'FL',null,null,null,null,null],
+];
+
+const sg=document.getElementById('stateGrid');
+const placed=new Set();
+dedupLayout.forEach(row=>{
+  row.forEach(st=>{
+    const cell=document.createElement('div');
+    if(st&&stateRates[st]&&!placed.has(st)){
+      placed.add(st);
+      const r=stateRates[st];
+      cell.className='state-box';
+      cell.style.background=rateToColor(r);
+      cell.style.color=r>28?'#fff':'#e8edf4';
+      cell.textContent=st;
+      cell.title=`${st}: ${r.toFixed(1)} per million`;
+    } else {
+      cell.style.background='transparent';
+    }
+    sg.appendChild(cell);
+  });
+});
+
+/* ========== NAV HIGHLIGHT ========== */
+const sections=['hero','trends','map','incidents','coresponder','virginia','action'];
+const links=[...document.querySelectorAll('.nav-links a')];
+window.addEventListener('scroll',()=>{
+  let current='hero';
+  sections.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&window.scrollY>=el.offsetTop-80)current=id;
+  });
+  links.forEach(a=>{
+    a.classList.toggle('active',a.getAttribute('href')==='#'+current);
+  });
+});
+</script>
+<script data-pplx-inline-edit>
+(function(){
+  if(window===window.top)return;
+  function inlineAll(orig,clone){
+    if(orig.nodeType!==1)return;
+    try{
+      var cs=getComputedStyle(orig);
+      var t='';
+      for(var i=0;i<cs.length;i++){t+=cs[i]+':'+cs.getPropertyValue(cs[i])+';';}
+      clone.style.cssText=t;
+    }catch(e){}
+    var oc=orig.children,cc=clone.children;
+    for(var j=0;j<oc.length&&j<cc.length;j++){inlineAll(oc[j],cc[j]);}
+  }
+  function stripExternal(clone){
+    var imgs=clone.querySelectorAll('img');
+    for(var i=0;i<imgs.length;i++){
+      var s=imgs[i].getAttribute('src');
+      if(s&&!s.startsWith('data:'))imgs[i].removeAttribute('src');
+    }
+    var all=clone.querySelectorAll('*');
+    for(var i=0;i<all.length;i++){
+      var st=all[i].style.cssText;
+      if(st&&st.indexOf('url(')>=0){
+        all[i].style.cssText=st.replace(/url\(["']?(?!data:)[^)"']*["']?\)/gi,'none');
+      }
+    }
+  }
+  window.addEventListener('message',function(e){
+    if(!e.data||e.data.type!=='INLINE_EDIT_CAPTURE_REQUEST')return;
+    var scrollX=window.scrollX||window.pageXOffset||0;
+    var scrollY=window.scrollY||window.pageYOffset||0;
+    var w=window.innerWidth,h=window.innerHeight;
+    try{
+      var clone=document.documentElement.cloneNode(true);
+      var rm=clone.querySelectorAll('script,link[rel="stylesheet"],style');
+      for(var i=0;i<rm.length;i++){rm[i].remove();}
+      inlineAll(document.documentElement,clone);
+      stripExternal(clone);
+      var html=new XMLSerializer().serializeToString(clone);
+      var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'">'
+        +'<foreignObject width="100%" height="100%">'
+        +'<div xmlns="http://www.w3.org/1999/xhtml" style="width:'+w+'px;height:'+h+'px;overflow:hidden">'
+        +'<div style="transform:translate(-'+scrollX+'px,-'+scrollY+'px);transform-origin:top left">'
+        +html+'</div></div></foreignObject></svg>';
+      var svgUrl='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+      var img=new Image();
+      img.onload=function(){
+        var c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0);
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:c.toDataURL('image/png'),scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.onerror=function(){
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.src=svgUrl;
+    }catch(err){
+      window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+    }
+  });
+})();
+</script>
+<script>
+/* ===== LIVE MONITOR LOADER =====
+   Reads orion_data.json (made by: python -m app.main export-orion).
+   If the file is missing, this whole section stays hidden and the rest
+   of the page is unaffected. To host the JSON somewhere else (for
+   example Squarespace file storage), change ORION_DATA_URL below. */
+const ORION_DATA_URL='https://raw.githubusercontent.com/joealbert8021-droid/orion-data/main/orion_data.json';
+(async function(){
+  try{
+    const res=await fetch(ORION_DATA_URL,{cache:'no-store'});
+    if(!res.ok)return;
+    const d=await res.json();
+    if(!d||!d.totals)return;
+
+    const fmt=n=>Number(n||0).toLocaleString('en-US');
+    document.getElementById('lm-total').textContent=fmt(d.totals.incidents);
+    document.getElementById('lm-confirmed').textContent=fmt(d.totals.confirmed);
+    document.getElementById('lm-fatal').textContent=fmt((d.by_fatality_status||{}).fatal||0);
+    document.getElementById('lm-sources').textContent=fmt(d.totals.active_sources);
+    if(d.generated_at){
+      document.getElementById('lm-updated').textContent=new Date(d.generated_at).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+    }
+
+    const gridColor='rgba(255,255,255,.05)',tickColor='#7a8fa8';
+    const axisOpts={x:{grid:{color:gridColor},ticks:{color:tickColor}},y:{beginAtZero:true,grid:{color:gridColor},ticks:{color:tickColor,precision:0}}};
+
+    const years=Object.keys(d.by_year||{});
+    if(years.length){
+      new Chart(document.getElementById('lmYearChart').getContext('2d'),{
+        type:'bar',
+        data:{labels:years,datasets:[{label:'Tracked incidents',data:years.map(y=>d.by_year[y]),backgroundColor:'rgba(233,69,96,.35)',borderColor:'rgba(233,69,96,.8)',borderWidth:1}]},
+        options:{responsive:true,plugins:{legend:{labels:{color:tickColor,font:{size:11}}}},scales:axisOpts}
+      });
+    }
+
+    const months=Object.keys(d.by_month||{});
+    if(months.length){
+      new Chart(document.getElementById('lmMonthChart').getContext('2d'),{
+        type:'line',
+        data:{labels:months,datasets:[{label:'Incidents per month',data:months.map(m=>d.by_month[m]),borderColor:'#00b4d8',backgroundColor:'rgba(0,180,216,.08)',pointBackgroundColor:'#00b4d8',pointRadius:3,tension:.35,fill:true}]},
+        options:{responsive:true,plugins:{legend:{labels:{color:tickColor,font:{size:11}}}},scales:axisOpts}
+      });
+    }
+
+    document.getElementById('livemonitor').style.display='';
+    document.getElementById('lm-nav').style.display='';
+  }catch(e){/* no data file yet: section stays hidden */}
+})();
+</script>
+</body>
+</html>
